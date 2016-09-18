@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.planez.extra.Extras;
 
@@ -19,7 +20,7 @@ public class Plane {
 	private VirtualJoystick virtualJoystick;
 	private Animation planeSprites;
 	private Sprite planeAnimation;
-	private Vector2 planePos;
+	private Rectangle planeRect;
 
 	public Plane(byte planeColor, VirtualJoystick virtualJoystick) {
 		this.virtualJoystick = virtualJoystick;
@@ -31,7 +32,7 @@ public class Plane {
 			Sprite frame3 = new Sprite(new Texture(Gdx.files.internal("planeRed3.png")));
 			Sprite[] frames = { frame1, frame2, frame3 };
 			planeSprites = new Animation(0.1f, frames);
-			planePos = new Vector2(Extras.xUnite((float) 20), Extras.yUnite((float) 70));
+			planeRect= new Rectangle(Extras.xUnite((float) 20), Extras.yUnite((float) 70), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
 			TextureRegion tr = planeSprites.getKeyFrame(0.1f);
 			planeAnimation = new Sprite(tr);
 		}
@@ -49,11 +50,11 @@ public class Plane {
 		planeAnimation.setOriginCenter();
 		planeAnimation.draw(batch);
 
-		if ((planeAnimation.getBoundingRectangle().x + planeAnimation.getBoundingRectangle().width < Gdx.graphics
+		if ((planeRect.x + planeRect.width < Gdx.graphics
 				.getWidth())
-				&& (planeAnimation.getBoundingRectangle().x + planeAnimation.getBoundingRectangle().width >= 0)
-				&& !(planeAnimation.getBoundingRectangle().y
-						+ planeAnimation.getBoundingRectangle().height >= Gdx.graphics.getHeight())) {
+				&& (planeRect.x + planeRect.width >= 0)
+				&& !(planeRect.y
+						+ planeRect.height >= Gdx.graphics.getHeight())) {
 			// if plane is touching the Right border
 			move(3.5f);
 			if (virtualJoystick.isDragging()) {
@@ -62,27 +63,27 @@ public class Plane {
 			} else {
 				planeAnimation.draw(batch);
 			}
-		} else if (planeAnimation.getBoundingRectangle().x + planeAnimation.getBoundingRectangle().width < 0) {
+		} else if (planeRect.x + planeRect.width < 0) {
 			// if plane is touching the Left border
-			planePos.x = Gdx.graphics.getWidth() - planeAnimation.getBoundingRectangle().getWidth()
+			planeRect.x = Gdx.graphics.getWidth() - planeRect.width
 					- Extras.xUnite((float) 1);
-			planeAnimation.setX(planePos.x);
-			planeAnimation.setX(Gdx.graphics.getWidth() - planeAnimation.getBoundingRectangle().getWidth() - 1);
-		} else if (planeAnimation.getBoundingRectangle().y+ planeAnimation.getBoundingRectangle().height >= Gdx.graphics.getHeight()) {
+			planeAnimation.setX(planeRect.x);
+			planeAnimation.setX(Gdx.graphics.getWidth() - planeRect.width - 1);
+		} else if (planeRect.y+ planeRect.height >= Gdx.graphics.getHeight()) {
 			// if plane is touching the TOP of the border
-			planePos.y = planeAnimation.getBoundingRectangle().y - Extras.xUnite((float) 5);
-			planeAnimation.setY(planePos.y);
+			planeRect.y = planeRect.y - Extras.xUnite((float) 5);
+			planeAnimation.setY(planeRect.y);
 		} else {
-			planePos.x = 0;
-			planeAnimation.setX(planePos.x);
+			planeRect.x = 0;
+			planeAnimation.setX(planeRect.x);
 		}
 	}
 
 	private void move(float sp) {
-		planePos.x += Extras.xUnite((float) Math.cos(Math.toRadians(planeAnimation.getRotation())) * sp);
-		planePos.y += Extras.yUnite((float) Math.sin(Math.toRadians(planeAnimation.getRotation())) * sp);
-		planeAnimation.setX(planePos.x);
-		planeAnimation.setY(planePos.y);
+		planeRect.x += Extras.xUnite((float) Math.cos(Math.toRadians(planeAnimation.getRotation())) * sp);
+		planeRect.y += Extras.yUnite((float) Math.sin(Math.toRadians(planeAnimation.getRotation())) * sp);
+		planeAnimation.setX(planeRect.x);
+		planeAnimation.setY(planeRect.y);
 
 	}
 
@@ -119,12 +120,12 @@ public class Plane {
 		this.planeAnimation = planeAnimation;
 	}
 
-	public Vector2 getPlanePos() {
-		return planePos;
+	public Rectangle getPlaneRect() {
+		return planeRect;
 	}
 
-	public void setPlanePos(Vector2 planePos) {
-		this.planePos = planePos;
+	public void setPlaneRect(Rectangle planeRect) {
+		this.planeRect = planeRect;
 	}
 
 }

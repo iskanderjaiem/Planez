@@ -1,7 +1,10 @@
 package com.planez.gameLogic;
 
+import java.awt.Color;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.utils.Array;
 
@@ -21,14 +24,14 @@ public class DangerZone {
 	}
 
 	// update the dangerArea Surface of the area with the given name
-	public boolean updateDangerZone(String uniqueAreaName, float x, float y, float width, float height) {
+	public boolean updateDangerZone(String uniqueAreaName, Rectangle rect) {
 		for (int i = 0; i < dangerAreas.size; i++) {
 			DangerArea dangerArea = dangerAreas.get(i);
 			if (dangerArea.getUniqueAreaName().equals(uniqueAreaName)) {
-				dangerArea.setX(x);
-				dangerArea.setY(y);
-				dangerArea.setWidth(width);
-				dangerArea.setHeight(height);
+				dangerArea.setX(rect.x);
+				dangerArea.setY(rect.y);
+				dangerArea.setWidth(rect.width);
+				dangerArea.setHeight(rect.height);
 				return true;
 			}
 		}
@@ -39,19 +42,21 @@ public class DangerZone {
 		shapeRenderer.begin();
 		for (int i = 0; i < dangerAreas.size; i++) {
 			DangerArea dangerArea = dangerAreas.get(i);
+			shapeRenderer.setColor(255, 0, 0, 0);
 			shapeRenderer.rect(dangerArea.getX(),dangerArea.getY(),dangerArea.getWidth(), dangerArea.getHeight());
 		}
 		shapeRenderer.end();
 	}
 
 	// check if the given surface is in a danger area
-	public boolean isDangerZone(int x, int y, int width, int height) {
+	public boolean isDangerZone(Rectangle rect) {
 		for (int i = 0; i < dangerAreas.size; i++) {
 			DangerArea dangerArea = dangerAreas.get(i);
-			if (((dangerArea.getX() > x) && (dangerArea.getX() + dangerArea.getWidth() < x))
-			// &&((dangerArea.getY()> y) && (
-			// dangerArea.getY()+dangerArea.getHeight()< y))
+			System.out.println(dangerArea.getY()+" < "+ rect.y +" < " + (dangerArea.getY()+dangerArea.getHeight()));
+			if ( ((dangerArea.getX()< rect.x) && ( rect.x  < (dangerArea.getX() + dangerArea.getWidth() )))
+			 &&((dangerArea.getY()< rect.y) && ( rect.y  < (dangerArea.getY() + dangerArea.getHeight())))
 			) {
+				System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 				return true;
 			}
 		}
@@ -79,6 +84,7 @@ public class DangerZone {
 			this.height = height;
 		}
 
+		
 		public String getUniqueAreaName() {
 			return uniqueAreaName;
 		}

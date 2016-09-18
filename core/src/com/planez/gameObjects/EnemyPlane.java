@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.planez.extra.Extras;
 
@@ -19,7 +20,7 @@ public class EnemyPlane {
 	private VirtualJoystick virtualJoystick;
 	private Animation planeSprites;
 	private Sprite planeAnimation;
-	private Vector2 planePos;
+	private Rectangle planeRect;
 	private float startTime;
 	private boolean animate;
 
@@ -38,8 +39,8 @@ public class EnemyPlane {
 			frame3.flip(true, false);
 			
 			Sprite[] frames = { frame1, frame2, frame3 };
-			planeSprites = new Animation(0.1f, frames);
-			planePos = new Vector2( Gdx.graphics.getWidth()-Extras.xUnite((float) 80), Gdx.graphics.getHeight()-Extras.yUnite((float) 70));
+			planeSprites = new Animation(0.1f, frames);	
+			planeRect= new Rectangle( Gdx.graphics.getWidth()-Extras.xUnite((float) 80), Gdx.graphics.getHeight()-Extras.yUnite((float) 70), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
 			TextureRegion tr = planeSprites.getKeyFrame(0.1f);
 			planeAnimation = new Sprite(tr);
 		}
@@ -69,22 +70,22 @@ public class EnemyPlane {
 		planeAnimation.setSize(Extras.xUnite(37), Extras.yUnite(37));
 		planeAnimation.setOriginCenter();
 		planeAnimation.draw(batch);
-		moveToLeft(3.5f);
+		moveToLeft(1.5f);
 	
 	}
 
 	private void move(float sp) {
-		planePos.x += Extras.xUnite((float) Math.cos(Math.toRadians(planeAnimation.getRotation())) * sp);
-		planePos.y += Extras.yUnite((float) Math.sin(Math.toRadians(planeAnimation.getRotation())) * sp);
-		planeAnimation.setX(planePos.x);
-		planeAnimation.setY(planePos.y);
+		planeRect.x += Extras.xUnite((float) Math.cos(Math.toRadians(planeAnimation.getRotation())) * sp);
+		planeRect.y += Extras.yUnite((float) Math.sin(Math.toRadians(planeAnimation.getRotation())) * sp);
+		planeAnimation.setX(planeRect.x);
+		planeAnimation.setY(planeRect.y);
 	}
 	
 	private void moveToLeft(float sp) {
-		planePos.x -= Extras.xUnite((float) Math.cos(Math.toRadians(planeAnimation.getRotation())) * sp);
-		planePos.y += Extras.yUnite((float) Math.sin(Math.toRadians(planeAnimation.getRotation())) * sp);
-		planeAnimation.setX(planePos.x);
-		planeAnimation.setY(planePos.y);
+		planeRect.x -= Extras.xUnite((float) Math.cos(Math.toRadians(planeAnimation.getRotation())) * sp);
+		planeRect.y += Extras.yUnite((float) Math.sin(Math.toRadians(planeAnimation.getRotation())) * sp);
+		planeAnimation.setX(planeRect.x);
+		planeAnimation.setY(planeRect.y);
 	}
 
 	public VirtualJoystick getVirtualJoystick() {
@@ -103,12 +104,13 @@ public class EnemyPlane {
 		this.planeAnimation = planeAnimation;
 	}
 
-	public Vector2 getPlanePos() {
-		return planePos;
+	public Rectangle getPlaneRect() {
+		return planeRect;
 	}
 
-	public void setPlanePos(Vector2 planePos) {
-		this.planePos = planePos;
+	public void setPlaneRect(Rectangle planeRect) {
+		this.planeRect = planeRect;
 	}
+
 
 }

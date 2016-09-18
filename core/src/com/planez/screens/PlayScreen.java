@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -126,7 +127,8 @@ public class PlayScreen implements Screen {
 		fireBall = new FireBall(fireButton);
 		
 		dangerZone=new DangerZone();
-		dangerZone.addDangerZone("test",20,20,20,20);
+		dangerZone.addDangerZone("plane",20,20,20,20);
+		dangerZone.addDangerZone("enemey1",enemyPlane.getPlaneRect().x,enemyPlane.getPlaneRect().y,enemyPlane.getPlaneRect().width,enemyPlane.getPlaneRect().height);
 	}
 
 	@Override
@@ -156,10 +158,24 @@ public class PlayScreen implements Screen {
 			enemyPlane.render(batch, delta);
 			pointerIdSetter();
 
+			Rectangle rectPlane = new Rectangle(plane.getPlaneRect().x,plane.getPlaneRect().y,plane.getPlaneRect().width,plane.getPlaneRect().height);
+			Rectangle rectEnemey1 = new Rectangle(enemyPlane.getPlaneRect().x,enemyPlane.getPlaneRect().y,enemyPlane.getPlaneRect().width,enemyPlane.getPlaneRect().height);
+
+			if (Intersector.overlaps(rectPlane, rectEnemey1)){
+				explosion.setAnimate(true);
+				explosion.render(batch, time,
+						plane.getPlaneRect().x - plane.getPlaneRect().getWidth() / 2 - Extras.xUnite(64) / 2,
+						plane.getPlaneRect().y - plane.getPlaneRect().getHeight() / 2,
+						Extras.xUnite(200) - Extras.yUnite(64) / 2, Extras.yUnite(200));
+			}
+				dangerZone.updateDangerZone("plane",rectPlane);
+				dangerZone.updateDangerZone("enemey1",rectEnemey1);
+			
 			
 		batch.end();
+		
 
-		dangerZone.updateDangerZone("test",plane.getPlanePos().x,plane.getPlanePos().y,Extras.xUnite(37),Extras.xUnite(37));
+		
 		dangerZone.draw(batch, delta);
 	}
 
@@ -176,13 +192,13 @@ public class PlayScreen implements Screen {
 
 	// draw the plane with the kerozene bar discharge and the explosion effect
 	private void planeDraw(SpriteBatch batch, float delta) {
-		if (plane.getPlanePos().y > Extras.yUnite(20) && lifeBar.getHealthPerc() > 0)
+		if (plane.getPlaneRect().y > Extras.yUnite(20) && lifeBar.getHealthPerc() > 0)
 			plane.render(batch, time);
-		else if (plane.getPlanePos().y > Extras.yUnite(40) && lifeBar.getHealthPerc() == 0) {
+		else if (plane.getPlaneRect().y > Extras.yUnite(40) && lifeBar.getHealthPerc() == 0) {
 			explosion.setAnimate(true);
 			explosion.render(batch, delta,
-					plane.getPlanePos().x - plane.getPlaneAnimation().getWidth() / 2 - Extras.xUnite(64) / 2,
-					plane.getPlanePos().y - plane.getPlaneAnimation().getHeight() / 2,
+					plane.getPlaneRect().x - plane.getPlaneAnimation().getWidth() / 2 - Extras.xUnite(64) / 2,
+					plane.getPlaneRect().y - plane.getPlaneAnimation().getHeight() / 2,
 					Extras.xUnite(200) - Extras.yUnite(64) / 2, Extras.yUnite(200));
 
 			if (lifeBar.getHealthPerc() > 0)
@@ -190,8 +206,8 @@ public class PlayScreen implements Screen {
 		} else {
 			explosion.setAnimate(true);
 			explosion.render(batch, delta,
-					plane.getPlanePos().x - plane.getPlaneAnimation().getWidth() / 2 - Extras.xUnite(64) / 2,
-					plane.getPlanePos().y - plane.getPlaneAnimation().getHeight() / 2 - Extras.yUnite(64) / 2,
+					plane.getPlaneRect().x - plane.getPlaneRect().getWidth() / 2 - Extras.xUnite(64) / 2,
+					plane.getPlaneRect().y - plane.getPlaneRect().getHeight() / 2 - Extras.yUnite(64) / 2,
 					Extras.xUnite(200), Extras.yUnite(200));
 
 			// plane is destroyed, substruct kerozene quickly
