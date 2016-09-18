@@ -1,6 +1,7 @@
 package com.planez.screens;
 
 import com.planez.extra.Extras;
+import com.planez.gameObjects.EnemyPlane;
 import com.planez.gameObjects.Explosion;
 import com.planez.gameObjects.FireBall;
 import com.planez.gameObjects.FireButton;
@@ -12,6 +13,8 @@ import com.planez.gameObjects.VirtualJoystick;
 
 import java.io.File;
 
+import javax.xml.stream.events.EndElement;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
@@ -22,9 +25,12 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.planez.game.Planez;
+import com.planez.gameLogic.DangerZone;
 
 public class PlayScreen implements Screen {
 
@@ -34,6 +40,7 @@ public class PlayScreen implements Screen {
 	private Sprite bgSand0, bg;
 	private ScrollingSprite bgSand1, bgSand2, bgSand3;
 	private Plane plane;
+	private EnemyPlane enemyPlane;
 	private float time = 0;
 	private Explosion explosion;
 	private PauseButton pauseButton;
@@ -43,6 +50,7 @@ public class PlayScreen implements Screen {
 	boolean explosionIsAnimated = false;
 	boolean pointerJoystick = false;
 	boolean pointerFireBall = false;
+	private DangerZone dangerZone;
 
 	private TextureRegion currentFrame;
 
@@ -69,6 +77,7 @@ public class PlayScreen implements Screen {
 		joystick.setTranslation(new Vector2(Extras.xUnite(50), Extras.yUnite(50)));
 
 		plane = new Plane(Plane.RED, joystick);
+		enemyPlane = new EnemyPlane(EnemyPlane.BLUE, joystick);
 
 		bg = new Sprite(new Texture(Gdx.files.internal("bg1.png")));
 		bg.setSize(Extras.xUnite(1024), Extras.yUnite(512));
@@ -96,8 +105,7 @@ public class PlayScreen implements Screen {
 
 		// Explosion
 		explosion = new Explosion(new Texture(Gdx.files.internal("explosion01_128.png")), 11, 10);
-
-		explosion.setAnimate(false);
+		
 		// Button PAUSE
 		Sprite pauseButtonSprite = new Sprite(new Texture(Gdx.files.internal("pause.png")));
 		pauseButtonSprite.setPosition(Extras.xUnite(710), Extras.yUnite(480 - 80));
@@ -116,6 +124,9 @@ public class PlayScreen implements Screen {
 		fireBallButtonSprite.setAlpha(0.4f);
 		fireButton = new FireButton(fireBallButtonSprite, fireBallSpriteTouched);
 		fireBall = new FireBall(fireButton);
+		
+		dangerZone=new DangerZone();
+		dangerZone.addDangerZone("test",20,20,20,20);
 	}
 
 	@Override
@@ -142,10 +153,14 @@ public class PlayScreen implements Screen {
 			fireBallDraw(batch, time);
 			planeDraw(batch, time);
 			
+			enemyPlane.render(batch, delta);
 			pointerIdSetter();
 
-
+			
 		batch.end();
+
+		dangerZone.updateDangerZone("test",plane.getPlanePos().x,plane.getPlanePos().y,Extras.xUnite(37),Extras.xUnite(37));
+		dangerZone.draw(batch, delta);
 	}
 
 	// permit multitouch
@@ -208,7 +223,6 @@ public class PlayScreen implements Screen {
 			pointerFireBall = false;
 		}
 		fireBall.draw(batch, time);
-
 	}
 
 	@Override
