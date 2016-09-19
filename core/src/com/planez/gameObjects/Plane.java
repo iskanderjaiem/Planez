@@ -48,7 +48,6 @@ public class Plane {
 		planeAnimation.setTexture(planeSprites.getKeyFrame(time).getTexture());
 		planeAnimation.setSize(Extras.xUnite(37), Extras.yUnite(37));
 		planeAnimation.setOriginCenter();
-		planeAnimation.draw(batch);
 
 		if ((planeRect.x + planeRect.width < Gdx.graphics
 				.getWidth())

@@ -155,22 +155,28 @@ public class PlayScreen implements Screen {
 			fireBallDraw(batch, time);
 			planeDraw(batch, time);
 			
+			if (enemyPlane != null)
 			enemyPlane.render(batch, delta);
 			pointerIdSetter();
 
 			Rectangle rectPlane = new Rectangle(plane.getPlaneRect().x,plane.getPlaneRect().y,plane.getPlaneRect().width,plane.getPlaneRect().height);
-			Rectangle rectEnemey1 = new Rectangle(enemyPlane.getPlaneRect().x,enemyPlane.getPlaneRect().y,enemyPlane.getPlaneRect().width,enemyPlane.getPlaneRect().height);
+			
+			Rectangle rectEnemey1;
+			if (enemyPlane != null){
+				rectEnemey1 = new Rectangle(enemyPlane.getPlaneRect().x,enemyPlane.getPlaneRect().y,enemyPlane.getPlaneRect().width,enemyPlane.getPlaneRect().height);
 
 			if (Intersector.overlaps(rectPlane, rectEnemey1)){
+				
 				explosion.setAnimate(true);
-				explosion.render(batch, time,
-						plane.getPlaneRect().x - plane.getPlaneRect().getWidth() / 2 - Extras.xUnite(64) / 2,
-						plane.getPlaneRect().y - plane.getPlaneRect().getHeight() / 2,
-						Extras.xUnite(200) - Extras.yUnite(64) / 2, Extras.yUnite(200));
+				enemyPlane=null;	 
+				// plane is destroyed, substruct kerozene quickly
+				while (lifeBar.getHealthPerc() > 0)
+					lifeBar.setHealthPerc(lifeBar.getHealthPerc() - 2);
+				
 			}
 				dangerZone.updateDangerZone("plane",rectPlane);
 				dangerZone.updateDangerZone("enemey1",rectEnemey1);
-			
+			}
 			
 		batch.end();
 		

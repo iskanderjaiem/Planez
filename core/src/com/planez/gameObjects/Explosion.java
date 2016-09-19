@@ -51,6 +51,8 @@ public class Explosion {
 			}
 		}
 	}
+	
+	
 
 	public boolean isAnimate() {
 		return animate;
