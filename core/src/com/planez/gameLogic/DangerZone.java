@@ -37,6 +37,19 @@ public class DangerZone {
 		}
 		return false;
 	}
+	
+
+	// remove the dangerArea Surface of the area with the given name
+	public boolean removeDangerZone(String uniqueAreaName, Rectangle rect) {
+		for (int i = 0; i < dangerAreas.size; i++) {
+			DangerArea dangerArea = dangerAreas.get(i);
+			if (dangerArea.getUniqueAreaName().equals(uniqueAreaName)) {
+				dangerAreas.removeIndex(i);
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public void draw(SpriteBatch batch, float delta) {
 		shapeRenderer.begin();

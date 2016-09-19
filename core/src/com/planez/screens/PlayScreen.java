@@ -3,7 +3,7 @@ package com.planez.screens;
 import com.planez.extra.Extras;
 import com.planez.gameObjects.EnemyPlane;
 import com.planez.gameObjects.Explosion;
-import com.planez.gameObjects.FireBall;
+import com.planez.gameObjects.FireBalls;
 import com.planez.gameObjects.FireButton;
 import com.planez.gameObjects.InfoBar;
 import com.planez.gameObjects.PauseButton;
@@ -46,7 +46,7 @@ public class PlayScreen implements Screen {
 	private Explosion explosion;
 	private PauseButton pauseButton;
 	private FireButton fireButton;
-	private FireBall fireBall;
+	private FireBalls fireBalls;
 	private InfoBar lifeBar;
 	boolean explosionIsAnimated = false;
 	boolean pointerJoystick = false;
@@ -124,7 +124,7 @@ public class PlayScreen implements Screen {
 		Sprite fireBallSpriteTouched = new Sprite(fireBallButtonSprite);
 		fireBallButtonSprite.setAlpha(0.4f);
 		fireButton = new FireButton(fireBallButtonSprite, fireBallSpriteTouched);
-		fireBall = new FireBall(fireButton);
+		fireBalls = new FireBalls(fireButton);
 		
 		dangerZone=new DangerZone();
 		dangerZone.addDangerZone("plane",20,20,20,20);
@@ -236,15 +236,18 @@ public class PlayScreen implements Screen {
 				fireButton.setPointerId(1);
 			}
 
-			if (fireButton.getTouchPeriod() >= 0 && fireButton.getTouchPeriod() <= 3)
-				fireBall.addBall(plane.getPlaneAnimation().getX() + plane.getPlaneAnimation().getHeight() / 2,
-						plane.getPlaneAnimation().getY() + plane.getPlaneAnimation().getWidth() / 2,
-						plane.getPlaneAnimation().getRotation(), 5);
+			if (fireButton.getTouchPeriod() >= 0 && fireButton.getTouchPeriod() <= 3){
+
+				fireBalls.addBall(plane.getPlaneRect().x + plane.getPlaneRect().height / 2,
+						plane.getPlaneRect().y + plane.getPlaneRect().width / 2,
+						plane.getPlaneAnimation().getRotation(), 5,dangerZone);
+			}
 
 		} else {
 			pointerFireBall = false;
 		}
-		fireBall.draw(batch, time);
+		
+		fireBalls.draw(batch, time,dangerZone);
 	}
 
 	@Override
