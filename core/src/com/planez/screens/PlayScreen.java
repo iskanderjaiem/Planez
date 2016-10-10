@@ -127,7 +127,7 @@ public class PlayScreen implements Screen {
 		fireBalls = new FireBalls(fireButton);
 		
 		dangerZone=new DangerZone();
-		dangerZone.addDangerZone("plane",20,20,20,20);
+		dangerZone.addDangerZone("playerPlane1",20,20,20,20);
 		dangerZone.addDangerZone("enemey1",enemyPlane.getPlaneRect().x,enemyPlane.getPlaneRect().y,enemyPlane.getPlaneRect().width,enemyPlane.getPlaneRect().height);
 	}
 
@@ -139,6 +139,10 @@ public class PlayScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
 		batch.begin();
+
+		if (enemyPlane == null)
+		enemyPlane = new EnemyPlane(EnemyPlane.BLUE, joystick);
+		
 			//Backgrounds render
 			bg.draw(batch);
 			bgSand3.animate(batch, 0.2f);
@@ -155,8 +159,6 @@ public class PlayScreen implements Screen {
 			fireBallDraw(batch, time);
 			planeDraw(batch, time);
 			
-			if (enemyPlane != null)
-			enemyPlane.render(batch, delta);
 			pointerIdSetter();
 
 			Rectangle rectPlane = new Rectangle(plane.getPlaneRect().x,plane.getPlaneRect().y,plane.getPlaneRect().width,plane.getPlaneRect().height);
@@ -165,6 +167,7 @@ public class PlayScreen implements Screen {
 			if (enemyPlane != null){
 				rectEnemey1 = new Rectangle(enemyPlane.getPlaneRect().x,enemyPlane.getPlaneRect().y,enemyPlane.getPlaneRect().width,enemyPlane.getPlaneRect().height);
 
+			//plane on plane destruction
 			if (Intersector.overlaps(rectPlane, rectEnemey1)){
 				
 				explosion.setAnimate(true);
@@ -174,10 +177,24 @@ public class PlayScreen implements Screen {
 					lifeBar.setHealthPerc(lifeBar.getHealthPerc() - 2);
 				
 			}
-				dangerZone.updateDangerZone("plane",rectPlane);
-				dangerZone.updateDangerZone("enemey1",rectEnemey1);
+			if (enemyPlane != null)
+			if (dangerZone.hasGotFireBallShot(enemyPlane.getPlaneRect())){
+				explosion.render(batch, delta, enemyPlane.getPlaneRect().x, enemyPlane.getPlaneRect().y, enemyPlane.getPlaneRect().width, enemyPlane.getPlaneRect().height);
+
+				explosion.setAnimate(true);
+				enemyPlane=null;
 			}
-			
+				
+			dangerZone.updateDangerZone("playerPlane1",rectPlane);
+			dangerZone.updateDangerZone("enemey1",rectEnemey1);
+
+			}
+
+			if (enemyPlane != null)
+				if (enemyPlane.getPlaneRect().getX()>0)
+					enemyPlane.render(batch, delta);
+				else
+					enemyPlane = null;
 		batch.end();
 		
 

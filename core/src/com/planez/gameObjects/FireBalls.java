@@ -32,8 +32,7 @@ public class FireBalls {
 
 	public void addBall(float initX, float initY, float rotation, float speed, DangerZone dangerZone) {
 		// fill the FireBall options
-		TextureRegion fireBallTexture = new TextureRegion(new Texture(Gdx.files.internal("spriteSheet.png")), 104, 0,
-				11, 9);
+		TextureRegion fireBallTexture = new TextureRegion(new Texture(Gdx.files.internal("spriteSheet.png")), 104, 0,11, 9);
 		width = 11;
 		height = 9;
 		Sprite fireBallSprite = new Sprite(fireBallTexture);
@@ -43,7 +42,7 @@ public class FireBalls {
 		Ball fireBall = new Ball(fireBallSprite, rotation, initX, initY, speed);
 
 		fireBallArray.add(fireBall);
-		dangerZone.addDangerZone("fireBall" + fireBall.getIdBall(), initX, initY, width, height);
+		dangerZone.addDangerZone("fireBall" + fireBall.getIdBall(), initX, initY, Extras.xUnite(width), Extras.yUnite(height));
 
 		NB_FIRE_BALLS++;
 	}
@@ -69,11 +68,11 @@ public class FireBalls {
 				currentBall.setRotation(fireBallArray.get(i).getRotation());
 				currentBallSprite.draw(batch);
 				dangerZone.updateDangerZone("fireBall" + fireBallArray.get(i).getIdBall(),
-						new Rectangle(currentBallSprite.getX(), currentBallSprite.getY(), width, height));
+						new Rectangle(currentBallSprite.getX(), currentBallSprite.getY(),  Extras.xUnite(width), Extras.yUnite(height)));
 
 			} else {
 				dangerZone.removeDangerZone("fireBall" + fireBallArray.get(i).getIdBall(),
-						new Rectangle(currentBallSprite.getX(), currentBallSprite.getY(), width, height));
+						new Rectangle(currentBallSprite.getX(), currentBallSprite.getY(),  Extras.xUnite(width), Extras.yUnite(height)));
 				fireBallArray.remove(i);
 			}
 

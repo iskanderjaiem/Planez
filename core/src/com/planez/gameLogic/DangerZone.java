@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.utils.Array;
@@ -55,26 +56,32 @@ public class DangerZone {
 		shapeRenderer.begin();
 		for (int i = 0; i < dangerAreas.size; i++) {
 			DangerArea dangerArea = dangerAreas.get(i);
-			shapeRenderer.setColor(255, 0, 0, 0);
+			
+				if (dangerAreas.get(i).getUniqueAreaName().contains("fireBall"))
+					shapeRenderer.setColor(255, 0, 0, 0);//fireBall RED Color
+				else if (dangerAreas.get(i).getUniqueAreaName().contains("player"))
+					shapeRenderer.setColor(255, 255, 255, 0);//player WHITE Color
+				else
+					shapeRenderer.setColor(0, 0, 255, 0);//else BLUE Color
+				
 			shapeRenderer.rect(dangerArea.getX(),dangerArea.getY(),dangerArea.getWidth(), dangerArea.getHeight());
 		}
 		shapeRenderer.end();
 	}
-
-	// check if the given surface is in a danger area
-	public boolean isDangerZone(Rectangle rect) {
-		for (int i = 0; i < dangerAreas.size; i++) {
-			DangerArea dangerArea = dangerAreas.get(i);
-			System.out.println(dangerArea.getY()+" < "+ rect.y +" < " + (dangerArea.getY()+dangerArea.getHeight()));
-			if ( ((dangerArea.getX()< rect.x) && ( rect.x  < (dangerArea.getX() + dangerArea.getWidth() )))
-			 &&((dangerArea.getY()< rect.y) && ( rect.y  < (dangerArea.getY() + dangerArea.getHeight())))
-			) {
-				System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-				return true;
+	
+	// check if the given surface got a fireBall shot
+		public boolean hasGotFireBallShot(Rectangle rect) {
+			for (int i = 0; i < dangerAreas.size; i++) {
+				DangerArea dangerArea = dangerAreas.get(i);
+				if ( dangerAreas.get(i).getUniqueAreaName().contains("fireBall")
+						&& Intersector.overlaps(dangerAreas.get(i).getRect(), rect)
+				) {
+					System.out.println("oooooooooooooooooooooo");
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
-	}
 
 	public Array<DangerArea> getDangerAreas() {
 		return dangerAreas;
@@ -132,6 +139,10 @@ public class DangerZone {
 
 		public float getHeight() {
 			return height;
+		}
+
+		public Rectangle getRect() {
+			return new Rectangle(x,y,height,width);
 		}
 
 		public void setHeight(float height) {
