@@ -33,7 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.planez.game.Planez;
 import com.planez.gameLogic.DangerZone;
 
-public class PlayScreen implements Screen {
+public class MultiplayerScreen implements Screen {
 
 	private Planez game;
 	private SpriteBatch batch;
@@ -53,9 +53,8 @@ public class PlayScreen implements Screen {
 	boolean pointerFireBall = false;
 	private DangerZone dangerZone;
 
-	private TextureRegion currentFrame;
 
-	public PlayScreen(Planez game) {
+	public MultiplayerScreen(Planez game) {
 		this.game = game;
 	}
 
@@ -65,6 +64,8 @@ public class PlayScreen implements Screen {
 		batch = new SpriteBatch();
 		Sprite bgJoystickSprite = new Sprite(new Texture(Gdx.files.internal("joystick_background.png")));
 		Sprite thumbJoystickSprite = new Sprite(new Texture(Gdx.files.internal("joystick_thumb.png")));
+		
+		//Adapt Joystick to the screen size 
 		bgJoystickSprite.setBounds(Extras.xUnite(bgJoystickSprite.getBoundingRectangle().getX()),
 				Extras.yUnite(bgJoystickSprite.getBoundingRectangle().getY()),
 				Extras.xUnite(bgJoystickSprite.getBoundingRectangle().getWidth()),
@@ -77,9 +78,11 @@ public class PlayScreen implements Screen {
 		joystick = new VirtualJoystick(bgJoystickSprite, thumbJoystickSprite);
 		joystick.setTranslation(new Vector2(Extras.xUnite(50), Extras.yUnite(50)));
 
+		//PLANES
 		plane = new Plane(Plane.RED, joystick);
 		enemyPlane = new EnemyPlane(EnemyPlane.BLUE, joystick);
 
+		//BACKGROUNDS
 		bg = new Sprite(new Texture(Gdx.files.internal("bg1.png")));
 		bg.setSize(Extras.xUnite(1024), Extras.yUnite(512));
 
@@ -104,10 +107,10 @@ public class PlayScreen implements Screen {
 
 		lifeBar = new InfoBar(10, 10);
 
-		// Explosion
+		// EXPLOSION
 		explosion = new Explosion(new Texture(Gdx.files.internal("explosion01_128.png")), 11, 10);
 		
-		// Button PAUSE
+		// PAUSE BUTTON
 		Sprite pauseButtonSprite = new Sprite(new Texture(Gdx.files.internal("pause.png")));
 		pauseButtonSprite.setPosition(Extras.xUnite(710), Extras.yUnite(480 - 80));
 		pauseButtonSprite.setSize(Extras.xUnite(70), Extras.yUnite(70));
@@ -115,7 +118,7 @@ public class PlayScreen implements Screen {
 		pauseButtonSprite.setAlpha(0.2f);
 		pauseButton = new PauseButton(pauseButtonSprite, pauseButtonSpriteTouched);
 
-		// Button fireBall
+		// FIREBALL BUTTON
 		Sprite fireBallButtonSprite = new Sprite(new Texture(Gdx.files.internal("fireBall1.png")));
 		fireBallButtonSprite.setPosition(Extras.xUnite(640), Extras.yUnite(80));
 		fireBallButtonSprite.setSize(Extras.xUnite(70), Extras.yUnite(70));
@@ -135,14 +138,8 @@ public class PlayScreen implements Screen {
 	public void render(float delta) {
 		time += delta;
 
-		Gdx.gl.glClearColor(255, 255, 255, 0);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
 		batch.begin();
-
-		if (enemyPlane == null)
-		enemyPlane = new EnemyPlane(EnemyPlane.BLUE, joystick);
-		
+			pointerIdSetter();
 			//Backgrounds render
 			bg.draw(batch);
 			bgSand3.animate(batch, 0.2f);
@@ -157,52 +154,20 @@ public class PlayScreen implements Screen {
 			joystick.draw(batch);
 			
 			fireBallDraw(batch, time);
-			planeDraw(batch, time);
+			//planeDraw(batch, time);
+			plane.init(batch,time);
 			
-			pointerIdSetter();
-
 			Rectangle rectPlane = new Rectangle(plane.getPlaneRect().x,plane.getPlaneRect().y,plane.getPlaneRect().width,plane.getPlaneRect().height);
-			
 			Rectangle rectEnemey1;
-			if (enemyPlane != null){
-				rectEnemey1 = new Rectangle(enemyPlane.getPlaneRect().x,enemyPlane.getPlaneRect().y,enemyPlane.getPlaneRect().width,enemyPlane.getPlaneRect().height);
-
-			//plane on plane destruction
-			if (Intersector.overlaps(rectPlane, rectEnemey1)){
-				explosion.setAnimate(true);
-				enemyPlane=null;	 
-				// plane is destroyed, substruct kerozene quickly
-				while (lifeBar.getHealthPerc() > 0)
-					lifeBar.setHealthPerc(lifeBar.getHealthPerc() - 2);
-				
-			}
-			if (enemyPlane != null)
-			if (dangerZone.hasGotFireBallShot(enemyPlane.getPlaneRect())){
-				explosion.render(batch, delta, enemyPlane.getPlaneRect().x/2, enemyPlane.getPlaneRect().y/2, enemyPlane.getPlaneRect().width, enemyPlane.getPlaneRect().height);
-				explosion.setAnimate(true);
-				enemyPlane=null;
-			}
-				
-			dangerZone.updateDangerZone("playerPlane1",rectPlane);
-			dangerZone.updateDangerZone("enemey1",rectEnemey1);
-
-			}
-
-			if (enemyPlane != null)
-				if (enemyPlane.getPlaneRect().getX()>0)
-					enemyPlane.render(batch, delta);
-				else
-					enemyPlane = null;
 		batch.end();
 		
-
-		
+		dangerZone.updateDangerZone("playerPlane1",rectPlane);
+		//dangerZone.updateDangerZone("enemey1",rectEnemey1);
 		dangerZone.draw(batch, delta);
 	}
 
 	// permit multitouch
 	private void pointerIdSetter() {
-
 		if (joystick.isPointerActive()) {
 			joystick.setPointerId(0);
 			fireButton.setPointerId(1);

@@ -76,7 +76,6 @@ public class DangerZone {
 				if ( dangerAreas.get(i).getUniqueAreaName().contains("fireBall")
 						&& Intersector.overlaps(dangerAreas.get(i).getRect(), rect)
 				) {
-					System.out.println("oooooooooooooooooooooo");
 					return true;
 				}
 			}

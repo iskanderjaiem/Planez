@@ -8,7 +8,7 @@ public class DesktopLauncher {
 	
 	//Core et desktop//
 		public static final int SCALE = 2;
-		public static final int WIDTH = 200 * SCALE;
+		public static final int WIDTH = 400 * SCALE;
 		public static final int HEIGHT =WIDTH * 3/5;
 		
 		

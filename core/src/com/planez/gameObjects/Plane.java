@@ -44,11 +44,17 @@ public class Plane {
 		this.virtualJoystick = virtualJoystick;
 	}
 
+	public void init(SpriteBatch batch, float time){
+		planeAnimation.setTexture(planeSprites.getKeyFrame(time).getTexture());
+		planeAnimation.setBounds(planeRect.x,planeRect.y,planeRect.width,planeRect.height);
+		planeAnimation.setOriginCenter();
+		planeAnimation.draw(batch);
+	}
+	
 	public void render(SpriteBatch batch, float time) {
 		planeAnimation.setTexture(planeSprites.getKeyFrame(time).getTexture());
 		planeAnimation.setSize(Extras.xUnite(37), Extras.yUnite(37));
 		planeAnimation.setOriginCenter();
-
 		if ((planeRect.x + planeRect.width < Gdx.graphics
 				.getWidth())
 				&& (planeRect.x + planeRect.width >= 0)
@@ -83,7 +89,6 @@ public class Plane {
 		planeRect.y += Extras.yUnite((float) Math.sin(Math.toRadians(planeAnimation.getRotation())) * sp);
 		planeAnimation.setX(planeRect.x);
 		planeAnimation.setY(planeRect.y);
-
 	}
 
 	/*

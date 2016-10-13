@@ -31,16 +31,11 @@ public class HomeScreen implements Screen{
 public final static float SCREEN_WIDTH = Gdx.graphics.getWidth();
 public final static float SCREEN_HEIGHT= Gdx.graphics.getHeight();
 	private Planez game;
-	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private ScrollingSprite bg1S,bg2S,bg3S ;
-	private Sprite btnPlayS,gameTitleS;
+	private Sprite gameTitleS;
 	
-	private int bg2AnimLap;
-	private int bg3AnimLap;
-	private float tt = 0,btnAlpha=0f;
-	private Timer timer;
-	private int i = 0;
+	private float time;
 	private Sprite panelBg,singlePlayerButtonSprite,multiplayerButtonSprite,scoreBoardButtonSprite,aboutButtonSprite;
 	private Button singlePlayerButton,multiplayerButton,scoreBoardButton,aboutButton;
 	
@@ -53,9 +48,6 @@ public final static float SCREEN_HEIGHT= Gdx.graphics.getHeight();
 	@Override
 	public void show() {
 
-
-		
-		timer = new Timer();
 		//Sprites
 		batch = new SpriteBatch();
 		bg1S = new ScrollingSprite(new Texture(Gdx.files.internal("bg1.png")));
@@ -67,20 +59,12 @@ public final static float SCREEN_HEIGHT= Gdx.graphics.getHeight();
 		bg2S.setSize(Extras.xUnite(bg2S.getWidth()), Extras.yUnite(bg2S.getHeight()));
 		bg3S.setSize(Extras.xUnite(bg3S.getWidth()), Extras.yUnite(bg3S.getHeight()));
 		
-		
-		/*
-		btnPlayS = new Sprite(new Texture(Gdx.files.internal("btnPlay.png")));
-		btnPlayS.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		gameTitleS = new Sprite(new Texture(Gdx.files.internal("gameTitle.png")));
 		gameTitleS.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.MipMapLinearLinear);
 		gameTitleS = new Sprite(gameTitleS);
-
-		btnPlayS.setPosition(Extras.xUnite(400-64),Extras.yUnite(240-64));
-		btnPlayS.setSize(Extras.xUnite(128), Extras.yUnite(128));
-
-		gameTitleS.setPosition(Extras.xUnite(128+64), Extras.yUnite(322));
+		gameTitleS.setPosition(Extras.xUnite(128+64), Extras.yUnite(320));
 		gameTitleS.setSize(Extras.xUnite(423), Extras.yUnite(100));
-		*/
+		
 		//ScreenSprite decomposer
 		
 		//*************SINGLE PLAYER BUTTON***********************
@@ -127,49 +111,39 @@ public final static float SCREEN_HEIGHT= Gdx.graphics.getHeight();
 	//****************************   RENDER *******************************
 	@Override
 	public void render(float delta) {
-		tt+=delta;
+		time+=delta;
 		batch.begin();
-			
-		
 			bg1S.draw(batch);
-			
 			bg2S.animate(batch,0.1f);
 			bg3S.animate(batch,0.2f);
 			
-			
-			//*********Animation Title
-			/*	if (btnAlpha < 1f ){
-					btnAlpha+=0.005f;System.out.println(""+btnAlpha);
-					btnPlayS.setAlpha(btnAlpha);}
-				else
-					btnPlayS.setAlpha(1);
-					gameTitleS.draw(batch);
-				
-
-			//*********Animation Play
-				if (btnAlpha < 1f ){
-					btnAlpha+=0.005f;
-					btnPlayS.setAlpha(btnAlpha);}
-				else{
-					btnPlayS.setAlpha(1);
-				}
-				btnPlayS.draw(batch);
-				*/
-				
-				if(singlePlayerButton.isTouched()){
-					game.setScreen(new PlayScreen(game));
-				}
-				
+				eventsListener();
+				//*********Animation Play
 				
 				panelBg.draw(batch);
 				singlePlayerButtonSprite.draw(batch);
 				multiplayerButtonSprite.draw(batch);
 				scoreBoardButtonSprite.draw(batch);
 				aboutButtonSprite.draw(batch);
+				
+
+				//*********Animation Title
+				System.out.println(time);
+				gameTitleS.draw(batch);
+						
 		batch.end();
 	}
 	
 
+	public void eventsListener(){
+
+		if(singlePlayerButton.isTouched()){
+			game.setScreen(new PlayScreen(game));
+		}else if (multiplayerButton.isTouched()){
+			game.setScreen(new MultiplayerScreen(game));
+		}
+	}
+	
 	@Override
 	public void resize(int width, int height) {
         show();
@@ -198,7 +172,6 @@ public final static float SCREEN_HEIGHT= Gdx.graphics.getHeight();
 		bg1S.getTexture().dispose();
 		bg2S.getTexture().dispose();
 		bg3S.getTexture().dispose();
-		btnPlayS.getTexture().dispose();
 		gameTitleS.getTexture().dispose();
 	}
 	
