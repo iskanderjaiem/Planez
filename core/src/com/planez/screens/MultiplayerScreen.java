@@ -37,8 +37,6 @@ public class MultiplayerScreen implements Screen {
 		batch.begin();
 			timeElapsedBatch+=delta;
 			
-			explosion.setAnimate(true);
-			
 		batch.end();
 	}
 

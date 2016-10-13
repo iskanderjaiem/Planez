@@ -31,15 +31,7 @@ public class ExplosionFire {
 
 	//render the explosion once
 	public void render(SpriteBatch batch, float delta, float timeElapsedBatch, float x, float y) {
-			if(explosionAnimation.isAnimationFinished(timeElapsedBatch-timeElapsedExplosion)){
-				System.out.println("END****************");
-				timeElapsedExplosion=0;
-			}else{
-				timeElapsedExplosion+=delta;
-				currentFrame = explosionAnimation.getKeyFrame((timeElapsedExplosion-timeElapsedExplosion), true);
-				batch.draw(currentFrame, x, y);
-				System.out.println("startTimeExplosion"+timeElapsedBatch);
-			}
+		
 	}
 
 	public boolean isAnimate() {
