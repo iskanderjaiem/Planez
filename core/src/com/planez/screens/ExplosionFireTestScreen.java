@@ -10,23 +10,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.planez.game.Planez;
 import com.planez.gameObjects.ExplosionFire;
 
-public class MultiplayerScreen implements Screen {
+public class ExplosionFireTestScreen implements Screen {
 
 	private Planez game;
 	private SpriteBatch batch;
 	private ExplosionFire explosion;
-	private float timeElapsedBatch=0;
 
-
-	public MultiplayerScreen(Planez game) {
+	public ExplosionFireTestScreen(Planez game) {
 		this.game = game;
 	}
 
 	@Override
 	public void show() {
-		timeElapsedBatch=0;
 		batch = new SpriteBatch();
-		// EXPLOSION
+		//1-explosion init
 		explosion = new ExplosionFire(new Texture(Gdx.files.internal("explosion01_128.png")), 11, 10);
 		}
 
@@ -34,22 +31,20 @@ public class MultiplayerScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(255, 255, 255, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		timeElapsedBatch+=delta;
 		batch.begin();
 			event();
+			//2-explosion rendering loop
 			explosion.render(batch);
 		batch.end();
 	}
 
-	
 	public void event(){
 		if (Gdx.input.isTouched()){
+			System.out.println("X= "+Gdx.input.getX());
+			System.out.println("Y= "+Gdx.input.getY());
+			//3-explosion animate
 			explosion.animate(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
 		}
-		
-		
-		
-		
 	}
 	
 	@Override
