@@ -109,11 +109,10 @@ public class PlayScreen implements Screen {
 		
 		// Button PAUSE
 		Sprite pauseButtonSprite = new Sprite(new Texture(Gdx.files.internal("pause.png")));
-		pauseButtonSprite.setPosition(Extras.xUnite(710), Extras.yUnite(480 - 80));
-		pauseButtonSprite.setSize(Extras.xUnite(70), Extras.yUnite(70));
 		Sprite pauseButtonSpriteTouched = new Sprite(pauseButtonSprite);
 		pauseButtonSprite.setAlpha(0.2f);
-		pauseButton = new PauseButton(pauseButtonSprite, pauseButtonSpriteTouched);
+		Rectangle rectBtn= new Rectangle(Extras.xUnite(710), Extras.yUnite(480 - 80),Extras.xUnite(70), Extras.yUnite(70));
+		pauseButton = new PauseButton(pauseButtonSprite, pauseButtonSprite, rectBtn);
 
 		// Button fireBall
 		Sprite fireBallButtonSprite = new Sprite(new Texture(Gdx.files.internal("fireBall1.png")));

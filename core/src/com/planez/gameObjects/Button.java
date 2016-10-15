@@ -3,6 +3,7 @@ package com.planez.gameObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Button {
 
@@ -14,12 +15,17 @@ public class Button {
 	public Button(Sprite btnSprite){
 		this.sprite = btnSprite;
 	}
-	
+
 	public Button(Sprite btnSprite,Sprite btnTouchedSprite){
 		this.sprite = btnSprite;
 		this.btnTouchedSprite = btnTouchedSprite;
 	}
-
+	
+	public Button(Sprite btnSprite,Sprite btnTouchedSprite,Rectangle rectBtn){
+		this(btnSprite,btnTouchedSprite);
+		btnSprite.setPosition(rectBtn.x,rectBtn.y);
+		btnSprite.setSize(rectBtn.width,rectBtn.height);
+	}
 
 	public boolean isTouched(){
 		if (Gdx.input.isTouched(pointerId))

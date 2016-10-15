@@ -15,7 +15,6 @@ public class MultiplayerScreen implements Screen {
 	private Planez game;
 	private SpriteBatch batch;
 	private ExplosionFire explosion;
-	private float timeElapsedBatch=0;
 
 
 	public MultiplayerScreen(Planez game) {
@@ -24,7 +23,6 @@ public class MultiplayerScreen implements Screen {
 
 	@Override
 	public void show() {
-		timeElapsedBatch=0;
 		batch = new SpriteBatch();
 		// EXPLOSION
 		explosion = new ExplosionFire(new Texture(Gdx.files.internal("explosion01_128.png")), 11, 10);
@@ -34,7 +32,6 @@ public class MultiplayerScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(255, 255, 255, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		timeElapsedBatch+=delta;
 		batch.begin();
 			event();
 			explosion.render(batch);
@@ -46,9 +43,6 @@ public class MultiplayerScreen implements Screen {
 		if (Gdx.input.isTouched()){
 			explosion.animate(Gdx.input.getX(),Gdx.graphics.getHeight()-Gdx.input.getY());
 		}
-		
-		
-		
 		
 	}
 	

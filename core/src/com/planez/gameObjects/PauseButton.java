@@ -2,6 +2,8 @@ package com.planez.gameObjects;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.planez.extra.Extras;
 import com.planez.game.Planez;
 import com.planez.screens.HomeScreen;
 
@@ -11,10 +13,10 @@ public class PauseButton extends Button {
 		super(btnSprite);
 	}
 	
-
-	public PauseButton(Sprite btnSprite,Sprite btnTouchedSprite){
-		super(btnSprite,btnTouchedSprite);
+	public PauseButton(Sprite btnSprite,Sprite btnSpriteTouched,Rectangle rectBtn){
+		super(btnSprite, btnSprite,rectBtn);
 	}
+	
 	public void draw(Planez game, SpriteBatch batch) {
 		 if (this.isTouched()){
 			 super.getBtnTouchedSprite().draw(batch); 
