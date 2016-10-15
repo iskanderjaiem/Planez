@@ -128,7 +128,6 @@ public final static float SCREEN_HEIGHT= Gdx.graphics.getHeight();
 				
 
 				//*********Animation Title
-				System.out.println(time);
 				gameTitleS.draw(batch);
 						
 		batch.end();
