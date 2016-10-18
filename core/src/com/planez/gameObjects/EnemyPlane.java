@@ -24,11 +24,8 @@ public class EnemyPlane {
 	private float startTime;
 	private boolean animate;
 
-	public EnemyPlane(byte planeColor, VirtualJoystick virtualJoystick) {
-		this.virtualJoystick = virtualJoystick;
-
+	public EnemyPlane(byte planeColor) {
 		if (planeColor == EnemyPlane.BLUE) {
-
 			Sprite frame1 = new Sprite(new Texture(Gdx.files.internal("planeBlue2.png")));
 			Sprite frame2 = new Sprite(new Texture(Gdx.files.internal("planeBlue2.png")));
 			Sprite frame3 = new Sprite(new Texture(Gdx.files.internal("planeBlue2.png")));
@@ -40,16 +37,32 @@ public class EnemyPlane {
 			
 			Sprite[] frames = { frame1, frame2, frame3 };
 			planeSprites = new Animation(0.1f, frames);	
-			planeRect= new Rectangle( Gdx.graphics.getWidth()-Extras.xUnite((float) 80), Gdx.graphics.getHeight()-Extras.yUnite((float) 70), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
-			TextureRegion tr = planeSprites.getKeyFrame(0.1f);
-			planeAnimation = new Sprite(tr);
 		}
+		planeRect= new Rectangle( Gdx.graphics.getWidth()-Extras.xUnite((float) 80), Gdx.graphics.getHeight()-Extras.yUnite((float) 70), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
+		TextureRegion tr = planeSprites.getKeyFrame(0.1f);
+		planeAnimation = new Sprite(tr);
 		planeSprites.setPlayMode(Animation.PlayMode.LOOP);
 		startTime = 0f;
 		animate = true;
 
 	}
-
+	
+	//overload constructor
+	public EnemyPlane(byte planeColor, VirtualJoystick virtualJoystick) {
+		this(planeColor);
+		this.virtualJoystick = virtualJoystick;
+		planeRect= new Rectangle(Gdx.graphics.getWidth()-Extras.xUnite((float) 80), Gdx.graphics.getHeight()-Extras.yUnite((float) 70), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
+	}
+	public EnemyPlane(byte planeColor, VirtualJoystick virtualJoystick, int x, int y) {
+		this(planeColor);
+		this.virtualJoystick = virtualJoystick;
+		planeRect= new Rectangle(Gdx.graphics.getWidth()-Extras.xUnite((float) x), Gdx.graphics.getHeight()-Extras.yUnite((float) y), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
+	}
+	public EnemyPlane(byte planeColor, int x, int y) {
+		this(planeColor);
+		planeRect= new Rectangle(Gdx.graphics.getWidth()-Extras.xUnite((float) x), Gdx.graphics.getHeight()-Extras.yUnite((float) y), Extras.xUnite((float) 37), Extras.yUnite(37));
+	}
+	
 	public void associate(VirtualJoystick virtualJoystick) {
 		this.virtualJoystick = virtualJoystick;
 	}
@@ -72,6 +85,13 @@ public class EnemyPlane {
 		planeAnimation.draw(batch);
 		moveToLeft(1.5f);
 	
+	}
+	public void draw(SpriteBatch batch, float time) {
+		planeAnimation.setTexture(planeSprites.getKeyFrame(time).getTexture());
+		planeAnimation.setSize(Extras.xUnite(37), Extras.yUnite(37));
+		planeAnimation.setOriginCenter();
+		planeAnimation.setPosition(planeRect.x, planeRect.y);
+		planeAnimation.draw(batch);
 	}
 
 	private void move(float sp) {

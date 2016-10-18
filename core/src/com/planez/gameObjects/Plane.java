@@ -16,28 +16,40 @@ public class Plane {
 	public static final byte RED = 10;
 	public static final byte BLUE = 11;
 	public static final byte YELLOW = 12;
-
 	private VirtualJoystick virtualJoystick;
 	private Animation planeSprites;
 	private Sprite planeAnimation;
 	private Rectangle planeRect;
 
-	public Plane(byte planeColor, VirtualJoystick virtualJoystick) {
-		this.virtualJoystick = virtualJoystick;
-
+	//Constructor
+	public Plane(byte planeColor) {
 		if (planeColor == Plane.RED) {
-
 			Sprite frame1 = new Sprite(new Texture(Gdx.files.internal("planeRed1.png")));
 			Sprite frame2 = new Sprite(new Texture(Gdx.files.internal("planeRed2.png")));
 			Sprite frame3 = new Sprite(new Texture(Gdx.files.internal("planeRed3.png")));
 			Sprite[] frames = { frame1, frame2, frame3 };
 			planeSprites = new Animation(0.1f, frames);
-			planeRect= new Rectangle(Extras.xUnite((float) 20), Extras.yUnite((float) 70), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
-			TextureRegion tr = planeSprites.getKeyFrame(0.1f);
-			planeAnimation = new Sprite(tr);
 		}
+		planeRect= new Rectangle(Extras.xUnite((float) 20), Extras.yUnite((float) 70), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
+		TextureRegion tr = planeSprites.getKeyFrame(0.1f);
+		planeAnimation = new Sprite(tr);
 		planeSprites.setPlayMode(Animation.PlayMode.LOOP);
-
+	}
+	
+	//overload constructor
+	public Plane(byte planeColor, VirtualJoystick virtualJoystick) {
+		this(planeColor);
+		this.virtualJoystick = virtualJoystick;
+		planeRect= new Rectangle(Extras.xUnite((float) 20), Extras.yUnite((float) 70), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
+	}
+	public Plane(byte planeColor, VirtualJoystick virtualJoystick, int x, int y) {
+		this(planeColor);
+		this.virtualJoystick = virtualJoystick;
+		planeRect= new Rectangle(Extras.xUnite((float) x), Extras.yUnite((float) y), Extras.xUnite((float) 37), Extras.yUnite((float) 37));
+	}
+	public Plane(byte planeColor, int x, int y) {
+		this(planeColor);
+		planeRect= new Rectangle(Extras.xUnite((float) x), Extras.yUnite((float) y), Extras.xUnite((float) 37), Extras.yUnite(37));
 	}
 
 	public void associate(VirtualJoystick virtualJoystick) {
@@ -62,7 +74,7 @@ public class Plane {
 						+ planeRect.height >= Gdx.graphics.getHeight())) {
 			// if plane is touching the Right border
 			move(3.5f);
-			if (virtualJoystick.isDragging()) {
+			if (virtualJoystick!=null && virtualJoystick.isDragging()) {
 				planeAnimation.setRotation((float) virtualJoystick.getAngle());
 				planeAnimation.draw(batch);
 			} else {
@@ -83,12 +95,19 @@ public class Plane {
 			planeAnimation.setX(planeRect.x);
 		}
 	}
+	
+	public void draw(SpriteBatch batch, float time) {
+		planeAnimation.setTexture(planeSprites.getKeyFrame(time).getTexture());
+		planeAnimation.setSize(Extras.xUnite(37), Extras.yUnite(37));
+		planeAnimation.setOriginCenter();
+		planeAnimation.setPosition(planeRect.x, planeRect.y);
+		planeAnimation.draw(batch);
+	}
 
 	private void move(float sp) {
 		planeRect.x += Extras.xUnite((float) Math.cos(Math.toRadians(planeAnimation.getRotation())) * sp);
 		planeRect.y += Extras.yUnite((float) Math.sin(Math.toRadians(planeAnimation.getRotation())) * sp);
-		planeAnimation.setX(planeRect.x);
-		planeAnimation.setY(planeRect.y);
+		planeAnimation.setPosition(planeRect.x, planeRect.y);
 	}
 
 	/*

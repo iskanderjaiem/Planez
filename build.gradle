@@ -100,11 +100,14 @@ project(":html") {
 
 project(":core") {
     apply plugin: "java"
-
+    sourceSets.test.java.srcDirs = ["test/"]
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "io.socket:socket.io-client:0.6.2"
+        
+        testCompile "junit:junit:4.11" 
     }
 }
 
